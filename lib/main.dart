@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           title: Text("Fakes Today"),
         ) ,
         body: Center(
-          child: Text("Fakes Today Welcomes You"),
+          child: Text("Fakes Today"),
         ),
       ),
     );
