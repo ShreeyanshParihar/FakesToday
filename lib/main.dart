@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import "package:flare_flutter/flare_actor.dart";
 
-//import 'blog.dart';
+import 'blog.dart';
+
+
 
 void main() => runApp(MyApp());
 
@@ -77,7 +79,7 @@ class _MainFetchDataState extends State<MainFetchData> {
           child: FlareActor("assets/Fakes_Today.flr",
             alignment: Alignment.center,
             fit: BoxFit.contain,
-            animation: "Untitled",
+            animation: "Loading",
           ) ,
         )
             : ListView.builder(
@@ -87,7 +89,7 @@ class _MainFetchDataState extends State<MainFetchData> {
                 contentPadding: EdgeInsets.all(10.0),
                 title: Text(list[index].title+" "+list[index].id),
                 onTap: () => {
-      //            Navigator.push(context, MaterialPageRoute(builder: (context) => Blog(list[index].id) ) )
+                 Navigator.push(context, MaterialPageRoute(builder: (context) => Blog(list[index].id) ) )
                 } ,
                 trailing: Image.network(
                   list[index].thumbnailUrl,
