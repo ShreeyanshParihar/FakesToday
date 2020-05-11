@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+import "package:flare_flutter/flare_actor.dart";
 
 //import 'blog.dart';
 
@@ -73,7 +74,11 @@ class _MainFetchDataState extends State<MainFetchData> {
 
         body: isLoading
             ? Center(
-          child: CircularProgressIndicator(),
+          child: FlareActor("assets/Fakes_Today.flr",
+            alignment: Alignment.center,
+            fit: BoxFit.contain,
+            animation: "Untitled",
+          ) ,
         )
             : ListView.builder(
             itemCount: list.length,
