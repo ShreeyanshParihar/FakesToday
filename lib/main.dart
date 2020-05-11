@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Fakes Today',
         theme: ThemeData(
           // This is the theme of your application.
           //
@@ -100,6 +101,7 @@ class _MainFetchDataState extends State<MainFetchData> {
                   fit: BoxFit.cover,
                   height: 40.0,
                   width: 40.0,
+                  filterQuality: FilterQuality.none,
                 ),
               );
             })

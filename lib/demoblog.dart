@@ -131,7 +131,7 @@ class _BloogState extends State<Bloog>
                         child: Image.network(
                           snapshot.data.thumbnailUrl,
                           fit: BoxFit.cover,
-
+                          filterQuality: FilterQuality.low,
                         ),
                       ),
                     ],
@@ -295,7 +295,7 @@ class _BloogState extends State<Bloog>
                           BorderRadius.circular(AppBar().preferredSize.height),
                           child: Icon(
                             Icons.arrow_back_ios,
-                            color: DesignCourseAppTheme.nearlyBlack,
+                            color: DesignCourseAppTheme.dark_grey,
                           ),
                           onTap: () {
                             Navigator.pop(context);
