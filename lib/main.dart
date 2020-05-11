@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 
 import 'package:http/http.dart' as http;
 import "package:flare_flutter/flare_actor.dart";
 
-import 'blog.dart';
+
+import 'demoblog.dart';
 
 
 
@@ -15,6 +18,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -89,7 +93,7 @@ class _MainFetchDataState extends State<MainFetchData> {
                 contentPadding: EdgeInsets.all(10.0),
                 title: Text(list[index].title+" "+list[index].id),
                 onTap: () => {
-                 Navigator.push(context, MaterialPageRoute(builder: (context) => Blog(list[index].id) ) )
+                 Navigator.push(context, MaterialPageRoute(builder: (context) => Bloog(list[index].id) ) )
                 } ,
                 trailing: Image.network(
                   list[index].thumbnailUrl,
@@ -98,7 +102,8 @@ class _MainFetchDataState extends State<MainFetchData> {
                   width: 40.0,
                 ),
               );
-            }));
+            })
+    );
   }
 }
 
