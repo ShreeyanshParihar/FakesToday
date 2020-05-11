@@ -55,7 +55,7 @@ class _MainFetchDataState extends State<MainFetchData> {
         isLoading = false;
       });
     } else {
-      throw Exception('Failed to load photos');
+      throw Exception('Failed to load photos do something');
     }
   }
 
