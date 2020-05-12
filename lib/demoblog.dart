@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'demoblogtheme.dart';
@@ -5,11 +9,11 @@ import 'dart:convert';
 
 import 'package:flare_flutter/flare_actor.dart';
 
-import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:http/http.dart' as http;
-
-
+import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Bloog extends StatefulWidget {
 
@@ -75,6 +79,28 @@ class _BloogState extends State<Bloog>
 
 
 
+    _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+   _shareImageFromUrl(String img,String title,String url,String cat) async {
+    try {
+      var request = await HttpClient().getUrl(Uri.parse(img));
+      var response = await request.close();
+      Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+      await Share.file('Fakes Today', 'img.jpg', bytes, '*/*',text:cat +" : "+ title +" "+url );
+    } catch (e) {
+      print('error: $e');
+    }
+  }
 
 
 
@@ -265,11 +291,18 @@ class _BloogState extends State<Bloog>
                       scale: CurvedAnimation(
                           parent: animationController, curve: Curves.fastOutSlowIn),
                       child: Card(
+
                         color: DesignCourseAppTheme.nearlyBlue,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50.0)),
                         elevation: 10.0,
-                        child: Container(
+                        child: GestureDetector(
+                         onTap: () async {
+                          await _shareImageFromUrl(snapshot.data.thumbnailUrl, snapshot.data.title,
+                               snapshot.data.url,snapshot.data.cat);
+
+                         },
+    child:Container(
                           width: 60,
                           height: 60,
                           child: Center(
@@ -280,6 +313,7 @@ class _BloogState extends State<Bloog>
                             ),
                           ),
                         ),
+                      ),
                       ),
                     ),
                   ),
@@ -310,10 +344,11 @@ class _BloogState extends State<Bloog>
                     child:Padding(padding: EdgeInsets.all(10),
                      child:
                      FloatingActionButton.extended(
-                      label: Text("Website"),
-                      icon: Icon(Icons.ac_unit),
+                      label: Text("Web"),
                       backgroundColor: DesignCourseAppTheme.nearlyBlue,
-                      onPressed: (){},
+                      onPressed: () {
+                        _launchInBrowser(snapshot.data.url);
+                      },
                       elevation: 5,
                      ),
                     ),
