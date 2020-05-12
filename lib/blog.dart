@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'demoblogtheme.dart';
+import 'blogtheme.dart';
 import 'dart:convert';
 
 import 'package:flare_flutter/flare_actor.dart';
@@ -15,22 +16,22 @@ import 'package:http/http.dart' as http;
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:path_provider/path_provider.dart';
 
-class Bloog extends StatefulWidget {
+class Blog extends StatefulWidget {
 
   final String id;
 
-  Bloog(this.id);
+  Blog(this.id);
 
   @override
-  _BloogState createState() => _BloogState(id);
+  _BlogState createState() => _BlogState(id);
 }
 
-class _BloogState extends State<Bloog>
+class _BlogState extends State<Blog>
     with TickerProviderStateMixin {
 
   final String ID;
 
-  _BloogState(this.ID);
+  _BlogState(this.ID);
 
   Future<Album> futureAlbum;
   var isLoading = false;
@@ -154,8 +155,8 @@ class _BloogState extends State<Bloog>
                     children: <Widget>[
                       AspectRatio(
                         aspectRatio: 1.2,
-                        child: Image.network(
-                          snapshot.data.thumbnailUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: snapshot.data.thumbnailUrl,
                           fit: BoxFit.cover,
                           filterQuality: FilterQuality.low,
                         ),
@@ -302,7 +303,7 @@ class _BloogState extends State<Bloog>
                                snapshot.data.url,snapshot.data.cat);
 
                          },
-    child:Container(
+                          child:Container(
                           width: 60,
                           height: 60,
                           child: Center(

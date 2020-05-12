@@ -14,7 +14,7 @@ description: Application for Fakes Today news
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -28,6 +28,7 @@ dependencies:
   intl: ^0.16.1
   url_launcher: ^5.4.5
   esys_flutter_share: 1.0.2
+  cached_network_image: ^2.2.0+1
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +49,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
    - assets/
+   - assets/app_icon.png
 
   #  - images/a_dot_ham.jpeg
 
