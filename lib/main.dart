@@ -1,12 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:fakestoday/allnews.dart';
 import 'package:fakestoday/blog.dart';
+import 'package:fakestoday/fake.dart';
+import 'package:fakestoday/real.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import "package:flare_flutter/flare_actor.dart";
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'blogtheme.dart';
 
@@ -135,13 +140,14 @@ class _LatestState extends State<Latest> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? Center(
+        ? Scaffold(
+      body:Center(
       child: FlareActor("assets/Fakes_Today.flr",
         alignment: Alignment.center,
         fit: BoxFit.contain,
         animation: "Loading",
       ) ,
-    ) : Container(
+    ) ): Container(
       color: DesignCourseAppTheme.nearlyWhite,
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -186,8 +192,10 @@ class _LatestState extends State<Latest> {
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Blog(fake[index].id) ) );
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => AllNews() ) );
                                     },
+
+                                    //Blog(fake[index].id)
                                     child: SizedBox(
                                       width: 300,
 
@@ -403,7 +411,7 @@ class _LatestState extends State<Latest> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Popular Course',
+                                'All Highlights',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -418,19 +426,24 @@ class _LatestState extends State<Latest> {
                                   child:ListView.builder(
                                       itemCount: latest.length,
                                       itemBuilder: (BuildContext context, int index) {
-                                        return ListTile(
-                                          contentPadding: EdgeInsets.all(10.0),
-                                          title: Text(latest[index].cat+":"+latest[index].title),
-                                          onTap: ()  {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => Blog(latest[index].id) ) );
-                                          } ,
-                                          //
-                                          trailing: CachedNetworkImage(
-                                            imageUrl: latest[index].thumbnailUrl,
-                                            fit: BoxFit.cover,
-                                            height: 40.0,
-                                            width: 40.0,
-                                            filterQuality: FilterQuality.none,
+                                        return  Card(
+                                          child: ListTile(
+                                            leading: CachedNetworkImage(
+                                              imageUrl: latest[index].thumbnailUrl,
+                                              fit: BoxFit.cover,
+                                              height: 80.0,
+                                              width: 80,
+                                              filterQuality: FilterQuality.none,
+                                            ),
+                                            title: Text(latest[index].title),
+                                            subtitle: Text(latest[index].cat,style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold ),),
+                                            onTap: (){
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Blog(latest[index].id)));
+                                            },
                                           ),
                                         );
                                       })
@@ -486,6 +499,14 @@ class _LatestState extends State<Latest> {
             onTap: () {
               setState(() {
                 categoryType = categoryTypeData;
+                switch(txt){
+                  case "All": Navigator.push(context, MaterialPageRoute(builder: (context) => AllNews() ) );
+                              break;
+                  case "Fake":Navigator.push(context, MaterialPageRoute(builder: (context) => Fake() ) );
+                         break;
+                  case "Real":Navigator.push(context, MaterialPageRoute(builder: (context) => Real() ) );
+                }
+
               });
             },
             child: Padding(
@@ -524,17 +545,72 @@ class _LatestState extends State<Latest> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-
-                Text(
-                  'Fakes Today',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                    letterSpacing: 0.27,
-                    color: DesignCourseAppTheme.darkerText,
+                Row(
+                children: <Widget>[
+                  Expanded(
+                    flex : 3,
+                    child:Text(
+                    'Fakes Today',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                      letterSpacing: 0.27,
+                      color: DesignCourseAppTheme.darkerText,
+                    ),
                   ),
-                ),
+                  ),
+
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color:DesignCourseAppTheme.nearlyBlue,
+                            borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+                            border: Border.all(color: DesignCourseAppTheme.nearlyBlue)),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: Colors.white24,
+                            borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+                            onTap: () {
+                              _launchInBrowser();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 6, bottom: 6, left: 9, right: 9),
+                              child: Center(
+                                child: Text(
+                                  "Website",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                    letterSpacing: 0.27,
+                                    color:DesignCourseAppTheme.nearlyWhite,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ),
+
+                  Expanded(
+                     flex: 0,
+                    child: IconButton(
+                      alignment: Alignment.topRight,
+                    icon: Icon(Icons.share),
+                      onPressed: () {   _shareImageFromUrl();  },
+                  )
+                  )
+
+                ],
+              ),
+
+
+
 
                 const SizedBox(
                   height: 16,
@@ -605,5 +681,27 @@ class Photo {
         id: json['ID'],
         cat: json['Category']
     );
+  }
+}
+
+_shareImageFromUrl()  async {
+  try {
+    final ByteData bytes = await rootBundle.load('assets/app_icon.png');
+    await Share.file(
+        'Fakes Today', 'fakestoday.png', bytes.buffer.asUint8List(), 'image/png', text: 'Download Fakes Today app using the link.');
+  } catch (e) {
+    print('error: $e');
+  }
+}
+
+_launchInBrowser() async {
+  if (await canLaunch("https://www.fakestoday.com")) {
+    await launch(
+      "https://www.fakestoday.com",
+      forceSafariVC: false,
+      forceWebView: false,
+    );
+  } else {
+    throw 'Could not launch fakestoday.com';
   }
 }
