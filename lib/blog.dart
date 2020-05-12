@@ -97,7 +97,7 @@ class _BlogState extends State<Blog>
       var request = await HttpClient().getUrl(Uri.parse(img));
       var response = await request.close();
       Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-      await Share.file('Fakes Today', 'img.jpg', bytes, '*/*',text:cat +" : "+ title +" "+url );
+      await Share.file('Fakes Today', 'img.jpg', bytes, '*/*',text:cat +" : "+ title +" "+url+"\n\n\n www.fakestoday.com \nTo keep yourself updated and more exciting stories, Download Fakes Today app using from our official website." );
     } catch (e) {
       print('error: $e');
     }
@@ -414,5 +414,5 @@ class Album {
 String Date(String d) {
   final now = DateTime.parse(d);
   final dt = DateTime(now.year, now.month, now.day, now.hour, now.minute);
-  return  DateFormat("dd/MM/YYYY-HH:mm").format(dt);
+  return  DateFormat("dd/MM/yyyy - HH:mm").format(dt);
 }

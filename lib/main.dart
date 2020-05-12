@@ -192,10 +192,10 @@ class _LatestState extends State<Latest> {
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => AllNews() ) );
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) =>Blog(fake[index].id) ) );
                                     },
 
-                                    //Blog(fake[index].id)
+                                    //
                                     child: SizedBox(
                                       width: 300,
 
@@ -688,7 +688,7 @@ _shareImageFromUrl()  async {
   try {
     final ByteData bytes = await rootBundle.load('assets/app_icon.png');
     await Share.file(
-        'Fakes Today', 'fakestoday.png', bytes.buffer.asUint8List(), 'image/png', text: 'Download Fakes Today app using the link.');
+        'Fakes Today', 'fakestoday.png', bytes.buffer.asUint8List(), 'image/png', text: 'www.fakestoday.com \nTo keep yourself updated, Download Fakes Today app using from our official website.');
   } catch (e) {
     print('error: $e');
   }
