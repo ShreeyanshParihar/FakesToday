@@ -36,7 +36,10 @@ class MyApp extends StatelessWidget {
       systemNavigationBarDividerColor: Colors.grey,
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
+
+
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Fakes Today',
         theme: ThemeData(
           // This is the theme of your application.
@@ -147,7 +150,8 @@ class _LatestState extends State<Latest> {
         fit: BoxFit.contain,
         animation: "Loading",
       ) ,
-    ) ): Container(
+    ) ):
+    Container(
       color: DesignCourseAppTheme.nearlyWhite,
       child: Scaffold(
         backgroundColor: Colors.transparent,
