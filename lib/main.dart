@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
+
+//import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:fakestoday/allnews.dart';
 import 'package:fakestoday/blog.dart';
 import 'package:fakestoday/fake.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import "package:flare_flutter/flare_actor.dart";
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'blogtheme.dart';
@@ -582,7 +584,7 @@ class _LatestState extends State<Latest> {
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(
-                                  top: 6, bottom: 6, left: 9, right: 9),
+                                  top: 10, bottom: 10, left: 10, right: 10),
                               child: Center(
                                 child: Text(
                                   "Website",
@@ -606,7 +608,7 @@ class _LatestState extends State<Latest> {
                     child: IconButton(
                       alignment: Alignment.topRight,
                     icon: Icon(Icons.share),
-                      onPressed: () {   _shareImageFromUrl();  },
+                      onPressed: () {   _shareImageFromUrl(context);  },
                   )
                   )
 
@@ -688,14 +690,22 @@ class Photo {
   }
 }
 
-_shareImageFromUrl()  async {
-  try {
-    final ByteData bytes = await rootBundle.load('assets/app_icon.png');
-    await Share.file(
-        'Fakes Today', 'fakestoday.png', bytes.buffer.asUint8List(), 'image/png', text: 'www.fakestoday.com \nTo keep yourself updated, Download Fakes Today app using from our official website.');
-  } catch (e) {
-    print('error: $e');
-  }
+_shareImageFromUrl(context)  async {
+
+  final RenderBox box = context.findRenderObject();
+  Share.share('https://www.fakestoday.com \nTo keep yourself updated, Download Fakes Today app using from our official website.',
+      subject: "fakestoday.com : ",
+      sharePositionOrigin:
+      box.localToGlobal(Offset.zero) &
+      box.size);
+
+  //  try {
+//    final ByteData bytes = await rootBundle.load('assets/app_icon.png');
+//    await Share.file(
+//        'Fakes Today', 'fakestoday.png', bytes.buffer.asUint8List(), 'image/png', text: 'www.fakestoday.com \nTo keep yourself updated, Download Fakes Today app using from our official website.');
+//  } catch (e) {
+//    print('error: $e');
+//  }
 }
 
 _launchInBrowser() async {

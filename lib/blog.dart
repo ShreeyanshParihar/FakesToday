@@ -2,9 +2,12 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:share/share.dart';
+
 import 'blogtheme.dart';
 import 'dart:convert';
 
@@ -13,7 +16,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:esys_flutter_share/esys_flutter_share.dart';
+//import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Blog extends StatefulWidget {
@@ -93,14 +96,25 @@ class _BlogState extends State<Blog>
   }
 
    _shareImageFromUrl(String img,String title,String url,String cat) async {
-    try {
-      var request = await HttpClient().getUrl(Uri.parse(img));
-      var response = await request.close();
-      Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-      await Share.file('Fakes Today', 'img.jpg', bytes, '*/*',text:cat +" : "+ title +" "+url+"\n\n\n www.fakestoday.com \nTo keep yourself updated and more exciting stories, Download Fakes Today app using from our official website." );
-    } catch (e) {
-      print('error: $e');
-    }
+
+
+     final RenderBox box = context.findRenderObject();
+     Share.share(cat+":"+title+"\nRead more at "+url+"\n\nOr download android app from www.fakestoday.com",
+         subject: "fakestoday.com : "+title,
+         sharePositionOrigin:
+         box.localToGlobal(Offset.zero) &
+         box.size);
+
+
+
+//    try {
+//      var request = await HttpClient().getUrl(Uri.parse(img));
+//      var response = await request.close();
+//      Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+//      await Share.file('Fakes Today', 'img.jpg', bytes, '*/*',text:cat +" : "+ title +" "+url+"\n\n\n www.fakestoday.com \nTo keep yourself updated and more exciting stories, Download Fakes Today app using from our official website." );
+//    } catch (e) {
+//      print('error: $e');
+//    }
   }
 
 
@@ -145,223 +159,210 @@ class _BlogState extends State<Blog>
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Container(
-            color: DesignCourseAppTheme.nearlyWhite,
+            color: Colors.transparent,
+
             child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Stack(
-                children: <Widget>[
-
-                  Column(
-                    children: <Widget>[
-                      AspectRatio(
-                        aspectRatio: 1.2,
-                        child: CachedNetworkImage(
-                          imageUrl: snapshot.data.thumbnailUrl,
-                          fit: BoxFit.cover,
-                          filterQuality: FilterQuality.low,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Positioned(
-                    top: (MediaQuery.of(context).size.height / 5) ,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: DesignCourseAppTheme.nearlyWhite,
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(32.0),
-                            topRight: Radius.circular(32.0)),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: DesignCourseAppTheme.grey.withOpacity(0.2),
-                              offset: const Offset(1.1, 1.1),
-                              blurRadius: 10.0),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: SingleChildScrollView(
-                          child: Container(
-                            constraints: BoxConstraints(
-                                minHeight: infoHeight,
-                                maxHeight: tempHeight > infoHeight
-                                    ? tempHeight
-                                    : infoHeight),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 32.0, left: 18, right: 16),
-                                  child: Text(
-                                    snapshot.data.title,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 22,
-                                      letterSpacing: 0.27,
-                                      color: DesignCourseAppTheme.darkerText,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16, bottom: 8, top: 16),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-
-                                      Text(
-                                        snapshot.data.date,
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w200,
-                                          fontSize: 16,
-                                          letterSpacing: 0.27,
-                                          color: DesignCourseAppTheme.nearlyBlue,
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          children: <Widget>[
-                                            Text(
-                                              snapshot.data.cat,
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w200,
-                                                fontSize: 22,
-                                                letterSpacing: 0.27,
-                                                color: DesignCourseAppTheme.grey,
-                                              ),
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: DesignCourseAppTheme.nearlyBlue,
-                                              size: 24,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-
-                                Expanded(
-
-                                  child:SingleChildScrollView(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 16, right: 16, top: 8, bottom: 8),
-                                      child: Text(
-                                        snapshot.data.text,
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w200,
-                                          fontSize: 14,
-                                          letterSpacing: 0.27,
-                                          color: DesignCourseAppTheme.grey,
-                                        ),
-
-                                      ),
-                                    ),
-
-                                  ),
-                                ),
-
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-
-
-                  Positioned(
-                    top: (MediaQuery.of(context).size.height / 5)  - 35,
-                    right: 35,
-                    child: ScaleTransition(
-                      alignment: Alignment.center,
-                      scale: CurvedAnimation(
-                          parent: animationController, curve: Curves.fastOutSlowIn),
-                      child: Card(
-
+              backgroundColor: DesignCourseAppTheme.nearlyWhite,
+              body: CustomScrollView(
+                slivers: <Widget>[
+                  SliverAppBar(
+                    leading: BackButton(color: DesignCourseAppTheme.nearlyBlack,),
+                    actions: <Widget>[
+                      Card(
                         color: DesignCourseAppTheme.nearlyBlue,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50.0)),
-                        elevation: 10.0,
+                        elevation: 20.0,
                         child: GestureDetector(
-                         onTap: () async {
-                          await _shareImageFromUrl(snapshot.data.thumbnailUrl, snapshot.data.title,
-                               snapshot.data.url,snapshot.data.cat);
-
-                         },
+                          onTap: ()  {
+                            _launchInBrowser(snapshot.data.url);
+                          },
                           child:Container(
-                          width: 60,
-                          height: 60,
-                          child: Center(
-                            child: Icon(
-                              Icons.share  ,
-                              color: DesignCourseAppTheme.nearlyWhite,
-                              size: 30,
+                            width: 70,
+                            height: 40,
+                            child: Center(
+                                child: Text("Web",style: TextStyle(color: DesignCourseAppTheme.nearlyWhite),)
                             ),
                           ),
                         ),
                       ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                    child: SizedBox(
-                      width: AppBar().preferredSize.height,
-                      height: AppBar().preferredSize.height,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius:
-                          BorderRadius.circular(AppBar().preferredSize.height),
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: DesignCourseAppTheme.dark_grey,
-                          ),
-                          onTap: () {
-                            Navigator.pop(context);
+
+
+                      Card(
+                        color: DesignCourseAppTheme.nearlyBlue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.0)),
+                        elevation: 20.0,
+                        child: GestureDetector(
+                          onTap: () async {
+                            await _shareImageFromUrl(snapshot.data.thumbnailUrl, snapshot.data.title,
+                                snapshot.data.url,snapshot.data.cat);
                           },
+                          child:Container(
+                            width: 50,
+                            height: 40,
+                            child: Center(
+                              child: Icon(
+                                Icons.share  ,
+                                color: DesignCourseAppTheme.nearlyWhite,
+                                size: 20,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
+
+
+                    ],
+                    expandedHeight: MediaQuery.of(context).size.height * 0.5,
+                    backgroundColor: Colors.transparent,
+
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: CachedNetworkImage(
+                        imageUrl: snapshot.data.thumbnailUrl,
+                        fit: BoxFit.contain,
+                        filterQuality: FilterQuality.low,
+                      ),
                     ),
                   ),
+                  SliverList(
 
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child:Padding(padding: EdgeInsets.all(10),
-                     child:
-                     FloatingActionButton.extended(
-                      label: Text("Web"),
-                      backgroundColor: DesignCourseAppTheme.nearlyBlue,
-                      onPressed: () {
-                        _launchInBrowser(snapshot.data.url);
-                      },
-                      elevation: 5,
-                     ),
+                    delegate: SliverChildListDelegate(
+                      <Widget>[
+
+                        Container(
+
+                          decoration: BoxDecoration(
+                            color: DesignCourseAppTheme.nearlyWhite,
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(32.0),
+                                topRight: Radius.circular(32.0)),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: DesignCourseAppTheme.grey.withOpacity(0.7),
+                                  offset: const Offset(2,2),
+                                  blurRadius: 20.0),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: SingleChildScrollView(
+                              child: Container(
+                                constraints: BoxConstraints(
+                                    minHeight: infoHeight,
+                                    maxHeight: tempHeight > infoHeight
+                                        ? tempHeight
+                                        : infoHeight),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+
+
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 32.0, left: 18, right: 16),
+                                      child: Text(
+                                        snapshot.data.title,
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 22,
+                                          letterSpacing: 0.27,
+                                          color: DesignCourseAppTheme.darkerText,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16, right: 16, bottom: 8, top: 16),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: <Widget>[
+
+                                          Text(
+                                            snapshot.data.date,
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w200,
+                                              fontSize: 16,
+                                              letterSpacing: 0.27,
+                                              color: DesignCourseAppTheme.nearlyBlue,
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Text(
+                                                  snapshot.data.cat,
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w200,
+                                                    fontSize: 22,
+                                                    letterSpacing: 0.27,
+                                                    color: DesignCourseAppTheme.grey,
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.star,
+                                                  color: DesignCourseAppTheme.nearlyBlue,
+                                                  size: 24,
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+
+                                    Expanded(
+
+                                      child:SingleChildScrollView(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 16, right: 16, top: 8, bottom: 8),
+                                          child: Text(
+                                            snapshot.data.text,
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                              letterSpacing: 0.27,
+                                              color: DesignCourseAppTheme.nearlyBlack,
+                                            ),
+
+                                          ),
+                                        ),
+
+                                      ),
+                                    ),
+
+
+
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+
+
+                      ],
                     ),
                   ),
 
 
 
                 ],
-
-
-
               ),
+
+
+
+
+
 
             ),
 
